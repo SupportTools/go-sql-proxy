@@ -40,9 +40,9 @@ jobs:
           export IMAGE_TAG="0.2.${{ github.run_number }}"
           echo "CHART_VERSION=${CHART_VERSION}"
           echo "APP_VERSION=${APP_VERSION}"
-          envsubst < helm/go-sql-proxy/Chart.yaml.template > helm/go-sql-proxy/Chart.yaml
-          envsubst < helm/go-sql-proxy/values.yaml.template > helm/go-sql-proxy/values.yaml
-          helm package helm/go-sql-proxy --destination helm/repo
+          envsubst < charts/go-sql-proxy/Chart.yaml.template > charts/go-sql-proxy/Chart.yaml
+          envsubst < charts/go-sql-proxy/values.yaml.template > charts/go-sql-proxy/values.yaml
+          helm package charts/go-sql-proxy --destination helm/repo
 
       - name: Checkout helm-chart repository
         uses: actions/checkout@v2
