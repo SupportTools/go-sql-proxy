@@ -12,11 +12,11 @@ spec:
   type: ClusterIP
   ports:
     - port: 3306
-      targetPort: http
+      targetPort: 3306
       protocol: TCP
       name: mysql
     - port: 9090
-      targetPort: http
+      targetPort: 9090
       protocol: TCP
       name: metrics
   selector:
