@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "go-sql-proxy"
+  labels:
+    app: "go-sql-proxy"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9090"
+    prometheus.io/path: "/metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "go-sql-proxy"
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+      labels:
+        app: "go-sql-proxy"
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: go-sql-proxy
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}            
+          ports:
+            - name: mysql
+              containerPort: 3306
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: metrics
+          env:
+            - name: SOURCE_DATABASE_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: go-sql-proxy
+                  key: SOURCE_DATABASE_SERVER
+            - name: SOURCE_DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: go-sql-proxy
+                  key: SOURCE_DATABASE_PORT
+            - name: SOURCE_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: go-sql-proxy
+                  key: SOURCE_DATABASE_USER
+            - name: SOURCE_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: go-sql-proxy
+                  key: SOURCE_DATABASE_PASSWORD
+            - name: SOURCE_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: go-sql-proxy
+                  key: SOURCE_DATABASE_NAME
+            - name: DEBUG
+              value: "{{ .Values.settings.debug }}"
+            - name: BIND_ADDRESS
+              value: "{{ .Values.settings.bind.host }}"
+            - name: BIND_PORT
+              value: "{{ .Values.settings.bind.port }}"
+            - name: METRICS_PORT
+              value: "{{ .Values.settings.metrics.port }}"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

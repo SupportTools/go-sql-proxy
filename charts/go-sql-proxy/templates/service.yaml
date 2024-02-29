@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "go-sql-proxy"
+  labels:
+    app: "go-sql-proxy"
+spec:
+  type: clusterIP
+  ports:
+    - port: 3306
+      targetPort: http
+      protocol: TCP
+      name: mysql
+    - port: 9090
+      targetPort: http
+      protocol: TCP
+      name: metrics
+  selector:
+    app: "go-sql-proxy"
