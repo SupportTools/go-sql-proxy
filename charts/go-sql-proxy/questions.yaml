@@ -1,0 +1,61 @@
+questions:
+  - variable: settings.bind.host
+    default: "0.0.0.0"
+    description: "The IP address the proxy should bind to for incoming connections, defaults to 0.0.0.0 (all interfaces)"
+    label: "Bind Address"
+    type: string
+    group: "Bind settings"
+  - variable: settings.bind.port
+    default: 3306
+    description: "The port the proxy should bind to for incoming connections"
+    label: "Bind Port"
+    type: int
+    group: "Bind settings"
+  - variable: settings.debug
+    default: false
+    description: "Enable debug logging"
+    label: "Debug"
+    type: bool
+    group: "Debug settings"
+  - variable: settings.metrics.enabled
+    default: true
+    description: "Enable metrics server"
+    label: "Metrics Enabled"
+    type: bool
+    group: "Metrics settings"
+  - variable: settings.metrics.port
+    default: 9090
+    description: "The port the metrics server should bind to"
+    label: "Metrics Port"
+    type: int
+    group: "Metrics settings"
+  - variable: settings.source.host
+    default: "example.db.ondigitalocean.com"
+    description: "The hostname of the database server to proxy connections to"
+    label: "Database Host"
+    type: string
+    group: "Database settings"
+  - variable: settings.source.port
+    default: 25060
+    description: "The port of the database server to proxy connections to"
+    label: "Database Port"
+    type: int
+    group: "Database settings"
+  - variable: settings.source.user
+    default: "doadmin"
+    description: "The username to use when connecting to the database server"
+    label: "Database User"
+    type: string
+    group: "Database settings"
+  - variable: settings.source.password
+    default: "password"
+    description: "The password to use when connecting to the database server"
+    label: "Database Password"
+    type: string
+    group: "Database settings"
+  - variable: settings.source.database
+    default: "defaultdb"
+    description: "The name of the database to connect to"
+    label: "Database Name"
+    type: string
+    group: "Database settings"

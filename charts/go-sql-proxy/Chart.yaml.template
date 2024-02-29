@@ -1,0 +1,15 @@
+apiVersion: v1
+name: go-sql-proxy
+version: ${CHART_VERSION}
+appVersion: ${APP_VERSION}
+description: go-sql-proxy is a tool for backing up the configuration files in a Kubernetes cluster and uploading them to a S3 bucket.
+keywords:
+- kubernetes
+- backup
+home: https://github.com/supporttools/go-sql-proxy
+sources:
+- https://github.com/supporttools/go-sql-proxy
+maintainers:
+- name: mattmattox
+  email: mmattox@support.tools
+icon: https://cdn.support.tools/go-sql-proxy/go-sql-proxy.png

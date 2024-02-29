@@ -37,6 +37,7 @@ jobs:
         run: |
           export CHART_VERSION="0.2.${{ github.run_number }}"
           export APP_VERSION="0.2.${{ github.run_number }}"
+          export IMAGE_TAG="0.2.${{ github.run_number }}"
           echo "CHART_VERSION=${CHART_VERSION}"
           echo "APP_VERSION=${APP_VERSION}"
           envsubst < helm/go-sql-proxy/Chart.yaml.template > helm/go-sql-proxy/Chart.yaml
