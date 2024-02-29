@@ -5,7 +5,7 @@ metadata:
   labels:
     app: "go-sql-proxy"
 spec:
-  type: clusterIP
+  type: ClusterIP
   ports:
     - port: 3306
       targetPort: http
