@@ -1,34 +1,4 @@
 questions:
-  - variable: settings.bind.host
-    default: "0.0.0.0"
-    description: "The IP address the proxy should bind to for incoming connections, defaults to 0.0.0.0 (all interfaces)"
-    label: "Bind Address"
-    type: string
-    group: "Bind settings"
-  - variable: settings.bind.port
-    default: 3306
-    description: "The port the proxy should bind to for incoming connections"
-    label: "Bind Port"
-    type: int
-    group: "Bind settings"
-  - variable: settings.debug
-    default: false
-    description: "Enable debug logging"
-    label: "Debug"
-    type: bool
-    group: "Debug settings"
-  - variable: settings.metrics.enabled
-    default: true
-    description: "Enable metrics server"
-    label: "Metrics Enabled"
-    type: bool
-    group: "Metrics settings"
-  - variable: settings.metrics.port
-    default: 9090
-    description: "The port the metrics server should bind to"
-    label: "Metrics Port"
-    type: int
-    group: "Metrics settings"
   - variable: settings.source.host
     default: "example.db.ondigitalocean.com"
     description: "The hostname of the database server to proxy connections to"
@@ -59,3 +29,33 @@ questions:
     label: "Database Name"
     type: string
     group: "Database settings"
+  - variable: settings.bind.host
+    default: "0.0.0.0"
+    description: "The IP address the proxy should bind to for incoming connections, defaults to 0.0.0.0 (all interfaces)"
+    label: "Bind Address"
+    type: string
+    group: "Bind settings"
+  - variable: settings.bind.port
+    default: 3306
+    description: "The port the proxy should bind to for incoming connections"
+    label: "Bind Port"
+    type: int
+    group: "Bind settings"
+  - variable: settings.debug
+    default: false
+    description: "Enable debug logging"
+    label: "Debug"
+    type: bool
+    group: "Debug settings"
+  - variable: settings.metrics.enabled
+    default: true
+    description: "Enable metrics server"
+    label: "Metrics Enabled"
+    type: bool
+    group: "Metrics settings"
+  - variable: settings.metrics.port
+    default: 9090
+    description: "The port the metrics server should bind to"
+    label: "Metrics Port"
+    type: int
+    group: "Metrics settings"
