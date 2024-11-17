@@ -7,6 +7,7 @@ import (
 
 // https://dev.mysql.com/doc/internals/en/capability-flags.html
 
+// CapabilityFlag is a bitmask that describes the server's supported capabilities.
 type CapabilityFlag uint32
 
 /**
@@ -25,6 +26,7 @@ To check if the flag is set, we use & operator
 00000111 & 01000000 = 0 => false
 */
 
+// Has returns true if the flag is set.
 func (r CapabilityFlag) Has(flag CapabilityFlag) bool {
 	return r&flag != 0
 }

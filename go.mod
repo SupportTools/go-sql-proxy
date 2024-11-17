@@ -1,8 +1,9 @@
 module github.com/supporttools/go-sql-proxy
 
-go 1.21.6
+go 1.22.4
 
 require (
+	github.com/ccoveille/go-safecast v1.2.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/prometheus/client_golang v1.18.0
 	github.com/sirupsen/logrus v1.9.3

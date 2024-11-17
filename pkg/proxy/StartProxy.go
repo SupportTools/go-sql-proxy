@@ -17,21 +17,32 @@ func StartProxy(p *models.Proxy, port int) error {
 	}
 
 	go func() {
-		log.Printf("Waiting for shut down signal ^C")
+		log.Printf("Waiting for shutdown signal ^C")
 		<-p.Ctx.Done()
 		p.ShutDownAsked = true
-		log.Printf("Shut down signal received, closing connections...")
-		ln.Close()
+		log.Printf("Shutdown signal received, closing connections...")
+		if err := ln.Close(); err != nil {
+			log.Printf("Error closing listener: %v", err)
+		}
 	}()
 
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
-			// Error handling
+			log.Printf("Failed to accept connection: %v", err)
+			if p.ShutDownAsked {
+				return nil // Exit loop if shutdown is requested
+			}
 			continue
 		}
 		p.ConnectionID++
 		connection := NewConnection(p.Host, p.Port, conn, p.ConnectionID, p.EnableDecoding)
-		go HandleConnection(connection)
+
+		// Handle connection and log any errors
+		go func(c *models.Connection) {
+			if err := HandleConnection(c); err != nil {
+				log.Printf("Error handling connection %d: %v", c.ID, err)
+			}
+		}(connection)
 	}
 }

@@ -41,7 +41,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel() // Ensure cancel is called to release resources if main exits before signal
 
-	p := proxy.NewProxy(config.CFG.SourceDatabaseServer, config.CFG.SourceDatabasePort, ctx)
+	p := proxy.NewProxy(ctx, config.CFG.SourceDatabaseServer, config.CFG.SourceDatabasePort)
 	p.EnableDecoding = true
 
 	var wg sync.WaitGroup
