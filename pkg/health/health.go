@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	// Import MySQL driver for database connectivity
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/supporttools/go-sql-proxy/pkg/logging"
 )
@@ -18,11 +19,15 @@ type VersionInfo struct {
 }
 
 var logger = logging.SetupLogging()
-var version = "MISSING VERSION INFO"
-var GitCommit = "MISSING GIT COMMIT"
-var BuildTime = "MISSING BUILD TIME"
 
-var db *sql.DB // Assuming db is initialized elsewhere in your application
+// version holds the application version. It's set during the build process.
+var version = "MISSING VERSION INFO"
+
+// GitCommit holds the Git commit hash of the build. It's set during the build process.
+var GitCommit = "MISSING GIT COMMIT"
+
+// BuildTime holds the timestamp of when the build was created. It's set during the build process.
+var BuildTime = "MISSING BUILD TIME"
 
 // HealthzHandler returns an HTTP handler function that checks database connectivity.
 func HealthzHandler(username, password, host string, port int, database string) http.HandlerFunc {

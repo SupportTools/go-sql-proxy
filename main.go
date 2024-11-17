@@ -50,7 +50,7 @@ func main() {
 		useSSL = true
 	}
 
-	p := proxy.NewProxy(config.CFG.SourceDatabaseServer, config.CFG.SourceDatabasePort, useSSL, ctx)
+	p := proxy.NewProxy(ctx, config.CFG.SourceDatabaseServer, config.CFG.SourceDatabasePort, useSSL)
 	p.EnableDecoding = true
 
 	var wg sync.WaitGroup

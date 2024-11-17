@@ -4,14 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"sync"
 
 	"github.com/supporttools/go-sql-proxy/pkg/metrics"
 	"github.com/supporttools/go-sql-proxy/pkg/models"
 )
-
-var connectionCounter int
-var connectionCounterMutex sync.Mutex
 
 // HandleConnection starts the proxy connection, handling data transfer and optional protocol decoding.
 func HandleConnection(c *models.Connection) error {
@@ -22,13 +18,13 @@ func HandleConnection(c *models.Connection) error {
 		return err
 	}
 
-	// Increment the connection counter
-	incrementConnectionCounter()
+	metrics.IncrementProxyConnections() // Increment metric counter
 
 	defer func() {
-		// Decrement the connection counter when the connection is closed
-		decrementConnectionCounter()
-		mysqlConn.Close()
+		metrics.DecrementProxyConnections() // Decrement metric counter when connection is closed
+		if err := mysqlConn.Close(); err != nil {
+			log.Printf("Error closing MySQL connection [%d]: %v", c.ID, err)
+		}
 	}()
 
 	log.Printf("Proxy connection [%d] established to MySQL server at %s", c.ID, address)
@@ -38,18 +34,4 @@ func HandleConnection(c *models.Connection) error {
 	}
 
 	return handleProtocolDecoding(c, mysqlConn)
-}
-
-func incrementConnectionCounter() {
-	connectionCounterMutex.Lock()
-	defer connectionCounterMutex.Unlock()
-	connectionCounter++
-	metrics.IncrementProxyConnections()
-}
-
-func decrementConnectionCounter() {
-	connectionCounterMutex.Lock()
-	defer connectionCounterMutex.Unlock()
-	connectionCounter--
-	metrics.DecrementProxyConnections()
 }
