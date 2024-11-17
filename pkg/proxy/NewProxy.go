@@ -6,11 +6,12 @@ import (
 	"github.com/supporttools/go-sql-proxy/pkg/models"
 )
 
-// NewProxy creates a new instance of the Proxy server.
-func NewProxy(host string, port int, ctx context.Context) *models.Proxy {
+// NewProxy creates a new instance of the Proxy server with optional SSL configuration.
+func NewProxy(host string, port int, useSSL bool, ctx context.Context) *models.Proxy {
 	return &models.Proxy{
-		Host: host,
-		Port: port,
-		Ctx:  ctx,
+		Host:   host,
+		Port:   port,
+		UseSSL: useSSL,
+		Ctx:    ctx,
 	}
 }
