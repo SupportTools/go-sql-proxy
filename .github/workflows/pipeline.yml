@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  Test:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/backend/go.sum') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-               
 
@@ -53,7 +53,7 @@ jobs:
           gosec ./...
 
   Build:
-    needs: test
+    needs: Test
     runs-on: ubuntu-latest
 
     steps:
@@ -77,7 +77,7 @@ jobs:
           --build-arg GIT_COMMIT=${{ github.sha }} \
           --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
           --cache-from supporttools/go-sql-proxy:latest \
-          -t supporttools/go-sql-proxy:"0.2.${{ github.run_number }}" \
+          -t supporttools/go-sql-proxy:"0.3.${{ github.run_number }}" \
           -t supporttools/go-sql-proxy:latest \
           --push \
           -f Dockerfile .
@@ -104,9 +104,9 @@ jobs:
 
       - name: Package Helm chart
         run: |
-          export CHART_VERSION="0.2.${{ github.run_number }}"
-          export APP_VERSION="0.2.${{ github.run_number }}"
-          export IMAGE_TAG="0.2.${{ github.run_number }}"
+          export CHART_VERSION="0.3.${{ github.run_number }}"
+          export APP_VERSION="0.3.${{ github.run_number }}"
+          export IMAGE_TAG="0.3.${{ github.run_number }}"
           echo "CHART_VERSION=${CHART_VERSION}"
           echo "APP_VERSION=${APP_VERSION}"
           envsubst < charts/go-sql-proxy/Chart.yaml.template > charts/go-sql-proxy/Chart.yaml
