@@ -6,7 +6,6 @@
 
 This project implements a SQL proxy server in Golang that acts as an intermediary between a client and a MySQL server. The proxy server can handle protocol decoding and data transfer while measuring and updating metrics for monitoring purposes.
 
-[![Build, Test and Publish](https://github.com/SupportTools/go-sql-proxy/actions/workflows/build-and-publish.yml/badge.svg?branch=main)](https://github.com/SupportTools/go-sql-proxy/actions/workflows/build-and-publish.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/SupportTools/go-sql-proxy)](https://goreportcard.com/report/github.com/SupportTools/go-sql-proxy)
 [![Go Reference](https://pkg.go.dev/badge/github.com/SupportTools/go-sql-proxy.svg)](https://pkg.go.dev/github.com/SupportTools/go-sql-proxy)
 

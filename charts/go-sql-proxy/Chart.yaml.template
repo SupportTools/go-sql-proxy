@@ -2,7 +2,7 @@ apiVersion: v1
 name: go-sql-proxy
 version: ${CHART_VERSION}
 appVersion: ${APP_VERSION}
-description: go-sql-proxy is a tool for backing up the configuration files in a Kubernetes cluster and uploading them to a S3 bucket.
+description: This project implements a SQL proxy server in Golang that acts as an intermediary between a client and a MySQL server. The proxy server can handle protocol decoding and data transfer while measuring and updating metrics for monitoring purposes.
 keywords:
 - kubernetes
 - backup
