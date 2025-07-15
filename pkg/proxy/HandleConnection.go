@@ -52,7 +52,7 @@ func HandleConnection(c *models.Connection) error {
 // dialWithSSL creates an SSL/TLS connection to the MySQL server
 func dialWithSSL(address string) (net.Conn, error) {
 	tlsConfig := &tls.Config{
-		InsecureSkipVerify: config.CFG.SSLSkipVerify,
+		InsecureSkipVerify: config.CFG.SSLSkipVerify, // #nosec G402 - InsecureSkipVerify is configurable for development environments
 	}
 
 	// Load custom CA if provided
