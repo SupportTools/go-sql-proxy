@@ -17,6 +17,11 @@ type AppConfig struct {
 	SourceDatabaseName     string `json:"sourceDatabaseName"`
 	BindAddress            string `json:"bindAddress"`
 	BindPort               int    `json:"bindPort"`
+	UseSSL                 bool   `json:"useSSL"`
+	SSLSkipVerify          bool   `json:"sslSkipVerify"`
+	SSLCAFile              string `json:"sslCAFile"`
+	SSLCertFile            string `json:"sslCertFile"`
+	SSLKeyFile             string `json:"sslKeyFile"`
 }
 
 var CFG AppConfig
@@ -32,6 +37,11 @@ func LoadConfiguration() {
 	CFG.SourceDatabaseName = getEnvOrDefault("SOURCE_DATABASE_NAME", "defaultdb")
 	CFG.BindAddress = getEnvOrDefault("BIND_ADDRESS", "0.0.0.0")
 	CFG.BindPort = parseEnvInt("BIND_PORT", 3306)
+	CFG.UseSSL = parseEnvBool("USE_SSL", false)
+	CFG.SSLSkipVerify = parseEnvBool("SSL_SKIP_VERIFY", false)
+	CFG.SSLCAFile = getEnvOrDefault("SSL_CA_FILE", "")
+	CFG.SSLCertFile = getEnvOrDefault("SSL_CERT_FILE", "")
+	CFG.SSLKeyFile = getEnvOrDefault("SSL_KEY_FILE", "")
 }
 
 func getEnvOrDefault(key, defaultValue string) string {

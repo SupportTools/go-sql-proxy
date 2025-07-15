@@ -43,7 +43,43 @@ To run the server, execute the following command:
 go run main.go
 ```
 
-You can customize the server configurations by setting the environment variables as defined in `pkg/config/config.go`.
+## Configuration
+
+The proxy is configured through environment variables:
+
+### Basic Configuration
+- `DEBUG`: Enable debug logging (default: false)
+- `METRICS_PORT`: Port for metrics/health endpoints (default: 9090)
+- `BIND_ADDRESS`: Proxy bind address (default: 0.0.0.0)
+- `BIND_PORT`: Proxy listening port (default: 3306)
+
+### Database Connection
+- `SOURCE_DATABASE_SERVER`: Target MySQL server hostname
+- `SOURCE_DATABASE_PORT`: Target MySQL server port (default: 25060)
+- `SOURCE_DATABASE_USER`: MySQL username
+- `SOURCE_DATABASE_PASSWORD`: MySQL password
+- `SOURCE_DATABASE_NAME`: Default database name
+
+### SSL/TLS Configuration
+- `USE_SSL`: Enable SSL/TLS connection to upstream MySQL (default: false)
+- `SSL_SKIP_VERIFY`: Skip SSL certificate verification (default: false)
+- `SSL_CA_FILE`: Path to CA certificate file for SSL verification
+- `SSL_CERT_FILE`: Path to client certificate file for mutual TLS
+- `SSL_KEY_FILE`: Path to client key file for mutual TLS
+
+### Example: Connecting to PlanetScale
+
+```bash
+export SOURCE_DATABASE_SERVER=your-database.planetscale.com
+export SOURCE_DATABASE_PORT=3306
+export SOURCE_DATABASE_USER=your-username
+export SOURCE_DATABASE_PASSWORD=your-password
+export SOURCE_DATABASE_NAME=your-database
+export USE_SSL=true
+export SSL_SKIP_VERIFY=true
+
+go run main.go
+```
 
 ## Note
 
