@@ -29,7 +29,7 @@ jobs:
 
       - name: Install static analysis tools
         run: |
-          go install golang.org/x/lint/golint@latest
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.62.2
           go install honnef.co/go/tools/cmd/staticcheck@latest
           go install github.com/securego/gosec/v2/cmd/gosec@latest
           go install github.com/psampaz/go-mod-outdated@latest
@@ -37,16 +37,21 @@ jobs:
 
       - name: Go static analysis
         run: |
-          golint ./...
+          golangci-lint run ./...
           staticcheck ./...
           go vet ./...
           deadcode .
 
       - name: Dependency management
         run: |
-          go mod vendor
+          go mod download
           go mod verify
-          go mod tidy
+          go mod tidy -v
+          git diff --exit-code go.mod go.sum || (echo "go.mod or go.sum was modified by go mod tidy - please run 'go mod tidy' locally and commit the changes" && exit 1)
+
+      - name: Run tests
+        run: |
+          go test -v -race ./...
 
       - name: Security scanning
         run: |
@@ -96,11 +101,6 @@ jobs:
 
       - name: Helm Lint
         run: helm lint charts/go-sql-proxy/
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.7.1
 
       - name: Package Helm chart
         run: |
