@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -16,46 +17,50 @@ import (
 var logger = logging.SetupLogging()
 
 var (
-	// proxy metrics
+	// proxyConnectionsTotal is a counter for the total number of connections to the proxy.
 	proxyConnectionsTotal = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "proxy_connections_total",
 		Help: "Total number of connections to the proxy.",
 	})
+	// proxyErrors is a counter for the total number of errors encountered by the proxy.
 	proxyErrors = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "proxy_errors_total",
 		Help: "Total number of errors encountered by the proxy.",
 	})
+	// proxyConnectionsOpen is a gauge for the number of open connections to the proxy.
 	proxyConnectionsOpen = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "proxy_connections_open",
 		Help: "Number of open connections to the proxy.",
 	})
-
-	// data transfer metrics
+	// DataFromClient is a counter for the total number of bytes transferred from client to server through the proxy.
 	DataFromClient = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "proxy_data_from_client_bytes_total",
 		Help: "Total number of bytes transferred from client to server through the proxy.",
 	})
+	// DataToClient is a counter for the total number of bytes transferred from server to client through the proxy.
 	DataToClient = prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "proxy_data_to_client_bytes_total",
 		Help: "Total number of bytes transferred from server to client through the proxy.",
 	})
-
-	// proxy request latency
+	// LastRequestLatency is a gauge for the latency of the last proxy request.
 	LastRequestLatency = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "proxy_last_request_latency_seconds",
 		Help: "The latency of the last proxy request in seconds.",
 	})
 )
 
+// counterWriter is an io.Writer that increments a prometheus counter with the number of bytes written.
 type counterWriter struct {
 	counter prometheus.Counter
 }
 
+// init registers the metrics with the prometheus client.
 func init() {
 	prometheus.MustRegister(DataFromClient)
 	prometheus.MustRegister(DataToClient)
 }
 
+// StartMetricsServer starts the metrics server on the configured port.
 func StartMetricsServer() {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
@@ -66,7 +71,16 @@ func StartMetricsServer() {
 	serverPortStr := strconv.Itoa(config.CFG.MetricsPort)
 	logger.Printf("Metrics server starting on port %d\n", config.CFG.MetricsPort)
 
-	if err := http.ListenAndServe(":"+serverPortStr, mux); err != nil {
+	server := &http.Server{
+		Addr:              ":" + serverPortStr,
+		Handler:           mux,
+		ReadTimeout:       10 * time.Second,  // Timeout for reading requests
+		WriteTimeout:      10 * time.Second,  // Timeout for writing responses
+		IdleTimeout:       120 * time.Second, // Timeout for idle connections
+		ReadHeaderTimeout: 5 * time.Second,   // Timeout for reading headers
+	}
+
+	if err := server.ListenAndServe(); err != nil {
 		logger.Fatalf("Metrics server failed to start: %v", err)
 	}
 }
@@ -97,6 +111,7 @@ func IncrementDataToClient() {
 	DataToClient.Inc()
 }
 
+// SetLastRequestLatency sets the last request latency gauge.
 func (cw *counterWriter) Write(p []byte) (int, error) {
 	n := len(p)
 	cw.counter.Add(float64(n))

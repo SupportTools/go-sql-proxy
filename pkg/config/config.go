@@ -24,6 +24,7 @@ type AppConfig struct {
 	SSLKeyFile             string `json:"sslKeyFile"`
 }
 
+// CFG is the global configuration object.
 var CFG AppConfig
 
 // LoadConfiguration loads configuration from environment variables.
