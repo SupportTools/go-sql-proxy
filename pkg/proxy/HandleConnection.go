@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"log"
 	"net"
 
@@ -57,7 +57,7 @@ func dialWithSSL(address string) (net.Conn, error) {
 
 	// Load custom CA if provided
 	if config.CFG.SSLCAFile != "" {
-		caCert, err := ioutil.ReadFile(config.CFG.SSLCAFile)
+		caCert, err := os.ReadFile(config.CFG.SSLCAFile)
 		if err != nil {
 			return nil, fmt.Errorf("failed to read CA file: %w", err)
 		}
