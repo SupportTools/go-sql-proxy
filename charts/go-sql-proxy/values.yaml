@@ -16,6 +16,12 @@ settings:
     user: "doadmin"
     password: "password"
     database: "defaultdb"
+  ssl:
+    enabled: false
+    skipVerify: false
+    caFile: ""
+    certFile: ""
+    keyFile: ""
 
 replicaCount: 1
 

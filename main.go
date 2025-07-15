@@ -41,16 +41,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel() // Ensure cancel is called to release resources if main exits before signal
 
-	var useSSL bool
-	if config.CFG.SourceDatabasePort == 3306 {
-		logger.Println("SourceDatabasePort is 3306, disabling SSL")
-		useSSL = false
-	} else {
-		logger.Println("Enabling SSL for non-default port")
-		useSSL = true
-	}
-
-	p := proxy.NewProxy(ctx, config.CFG.SourceDatabaseServer, config.CFG.SourceDatabasePort, useSSL)
+	p := proxy.NewProxy(ctx, config.CFG.SourceDatabaseServer, config.CFG.SourceDatabasePort, config.CFG.UseSSL)
 	p.EnableDecoding = true
 
 	var wg sync.WaitGroup

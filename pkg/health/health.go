@@ -8,6 +8,7 @@ import (
 
 	// Import MySQL driver for database connectivity
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/supporttools/go-sql-proxy/pkg/config"
 	"github.com/supporttools/go-sql-proxy/pkg/logging"
 )
 
@@ -35,7 +36,7 @@ func HealthzHandler(username, password, host string, port int, database string) 
 		logger.Info("HealthzHandler")
 
 		// Construct the DSN (Data Source Name) string
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port, database)
+		dsn := buildDSN(username, password, host, port, database)
 
 		// Open a new database connection
 		conn, err := sql.Open("mysql", dsn)
@@ -65,7 +66,7 @@ func ReadyzHandler(username, password, host string, port int, database string) h
 		logger.Info("ReadyzHandler")
 
 		// Construct the DSN (Data Source Name) string
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port, database)
+		dsn := buildDSN(username, password, host, port, database)
 
 		// Open a new database connection
 		conn, err := sql.Open("mysql", dsn)
@@ -106,4 +107,24 @@ func VersionHandler() http.HandlerFunc {
 			http.Error(w, "Failed to encode version info", http.StatusInternalServerError)
 		}
 	}
+}
+
+// buildDSN constructs a MySQL DSN with optional TLS parameters
+func buildDSN(username, password, host string, port int, database string) string {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port, database)
+	
+	if config.CFG.UseSSL {
+		// Add TLS parameters to the DSN
+		tlsConfig := "?tls=true"
+		
+		// For custom CA verification, we'd need to register a custom TLS config
+		// with the MySQL driver, but for basic SSL with skip-verify, this works
+		if config.CFG.SSLSkipVerify {
+			tlsConfig = "?tls=skip-verify"
+		}
+		
+		dsn += tlsConfig
+	}
+	
+	return dsn
 }

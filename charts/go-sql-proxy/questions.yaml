@@ -59,3 +59,37 @@ questions:
     label: "Metrics Port"
     type: int
     group: "Metrics settings"
+  - variable: settings.ssl.enabled
+    default: false
+    description: "Enable SSL/TLS connection to upstream MySQL server"
+    label: "Enable SSL"
+    type: bool
+    group: "SSL/TLS settings"
+  - variable: settings.ssl.skipVerify
+    default: false
+    description: "Skip SSL certificate verification (use for self-signed certificates)"
+    label: "Skip SSL Verify"
+    type: bool
+    group: "SSL/TLS settings"
+    show_if: "settings.ssl.enabled=true"
+  - variable: settings.ssl.caFile
+    default: ""
+    description: "Path to CA certificate file for SSL verification (optional)"
+    label: "CA Certificate File"
+    type: string
+    group: "SSL/TLS settings"
+    show_if: "settings.ssl.enabled=true"
+  - variable: settings.ssl.certFile
+    default: ""
+    description: "Path to client certificate file for mutual TLS (optional)"
+    label: "Client Certificate File"
+    type: string
+    group: "SSL/TLS settings"
+    show_if: "settings.ssl.enabled=true"
+  - variable: settings.ssl.keyFile
+    default: ""
+    description: "Path to client key file for mutual TLS (optional)"
+    label: "Client Key File"
+    type: string
+    group: "SSL/TLS settings"
+    show_if: "settings.ssl.enabled=true"

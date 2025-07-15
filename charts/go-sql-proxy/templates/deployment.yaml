@@ -84,6 +84,22 @@ spec:
               value: "{{ .Values.settings.bind.port }}"
             - name: METRICS_PORT
               value: "{{ .Values.settings.metrics.port }}"
+            - name: USE_SSL
+              value: "{{ .Values.settings.ssl.enabled }}"
+            - name: SSL_SKIP_VERIFY
+              value: "{{ .Values.settings.ssl.skipVerify }}"
+            {{- if .Values.settings.ssl.caFile }}
+            - name: SSL_CA_FILE
+              value: "{{ .Values.settings.ssl.caFile }}"
+            {{- end }}
+            {{- if .Values.settings.ssl.certFile }}
+            - name: SSL_CERT_FILE
+              value: "{{ .Values.settings.ssl.certFile }}"
+            {{- end }}
+            {{- if .Values.settings.ssl.keyFile }}
+            - name: SSL_KEY_FILE
+              value: "{{ .Values.settings.ssl.keyFile }}"
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
